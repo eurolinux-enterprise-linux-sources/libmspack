@@ -1,6 +1,6 @@
 Name:           libmspack
 Version:        0.5
-Release:        0.6.alpha%{?dist}
+Release:        0.7.alpha%{?dist}
 Summary:        Library for CAB and related files compression and decompression
 
 Group:          System Environment/Libraries
@@ -14,6 +14,9 @@ BuildRequires:  doxygen
 Patch1:         0001-Fix-off-by-one-bounds-check-on-CHM-PMGI-PMGL-chunk-n.patch
 Patch2:         0002-kwaj_read_headers-fix-handling-of-non-terminated-str.patch
 Patch3:         0003-Fix-off-by-one-error-in-chmd-TOLOWER-fallback.patch
+# Fixes for CVE-2018-18584 CVE-2018-18585
+Patch4:         0004-CAB-block-input-buffer-is-one-byte-too-small-for-max.patch
+Patch5:         0005-Avoid-returning-CHM-file-entries-that-are-blank-beca.patch
 
 # Patch 2 has a bunch of binary files that cannot be applied using
 # plain patch.  So I removed them and packaged them separately in this
@@ -44,6 +47,8 @@ for developing applications that use %{name}.
 %patch1 -p3
 %patch2 -p3
 %patch3 -p3
+%patch4 -p3
+%patch5 -p3
 pushd test
 zcat %{SOURCE2} | tar xvf -
 popd
@@ -91,6 +96,10 @@ popd
 
 
 %changelog
+* Fri Dec  7 2018 Richard W.M. Jones <rjones@redhat.com> - 0.5-0.7.alpha
+- Fixes for CVE-2018-18584 CVE-2018-18585.
+  resolves: rhbz#1648384 rhbz#1648385
+
 * Thu Aug  2 2018 Richard W.M. Jones <rjones@redhat.com> - 0.5-0.6.alpha
 - Fixes for CVE-2018-14679 CVE-2018-14680 CVE-2018-14681 CVE-2018-14682
 - resolves: rhbz#1611550 rhbz#1611551 rhbz#1611552 rhbz#1611553
