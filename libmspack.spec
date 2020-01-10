@@ -1,6 +1,6 @@
 Name:           libmspack
 Version:        0.5
-Release:        0.4.alpha%{?dist}
+Release:        0.5.alpha%{?dist}
 Summary:        Library for CAB and related files compression and decompression
 
 Group:          System Environment/Libraries
@@ -9,9 +9,6 @@ URL:            http://www.cabextract.org.uk/libmspack/
 Source0:        http://www.cabextract.org.uk/libmspack/%{name}-%{version}alpha.tar.gz
 Patch0:         %{name}-0.4alpha-doc.patch
 BuildRequires:  doxygen
-
-# Since this is only required for open-vm-tools:
-ExclusiveArch:  x86_64
 
 
 %description
@@ -74,6 +71,10 @@ popd
 
 
 %changelog
+* Thu Mar 16 2017 Richard W.M. Jones <rjones@redhat.com> - 0.5-0.5.alpha
+- Remove ExclusiveArch
+  resolves: rhbz#1422266
+
 * Thu Jul 30 2015 Richard W.M. Jones <rjones@redhat.com> - 0.5-0.4.alpha
 - Avoid 'test/md5.c:126:3: warning: dereferencing type-punned pointer
   will break strict-aliasing rules' by adding -fno-strict-aliasing flag.
