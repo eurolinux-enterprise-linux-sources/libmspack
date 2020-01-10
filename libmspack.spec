@@ -1,6 +1,6 @@
 Name:           libmspack
 Version:        0.5
-Release:        0.5.alpha%{?dist}
+Release:        0.6.alpha%{?dist}
 Summary:        Library for CAB and related files compression and decompression
 
 Group:          System Environment/Libraries
@@ -10,6 +10,18 @@ Source0:        http://www.cabextract.org.uk/libmspack/%{name}-%{version}alpha.t
 Patch0:         %{name}-0.4alpha-doc.patch
 BuildRequires:  doxygen
 
+# Fixes for CVE-2018-14679 CVE-2018-14680 CVE-2018-14681 CVE-2018-14682
+Patch1:         0001-Fix-off-by-one-bounds-check-on-CHM-PMGI-PMGL-chunk-n.patch
+Patch2:         0002-kwaj_read_headers-fix-handling-of-non-terminated-str.patch
+Patch3:         0003-Fix-off-by-one-error-in-chmd-TOLOWER-fallback.patch
+
+# Patch 2 has a bunch of binary files that cannot be applied using
+# plain patch.  So I removed them and packaged them separately in this
+# source tarball.
+Source2:        kwajd.tar.gz
+
+# We need to rerun autotools after applying the patches above.
+BuildRequires:  autoconf, automake, libtool
 
 %description
 The purpose of libmspack is to provide both compression and decompression of
@@ -29,8 +41,16 @@ for developing applications that use %{name}.
 %prep
 %setup -q -n %{name}-%{version}alpha
 %patch0 -p1
+%patch1 -p3
+%patch2 -p3
+%patch3 -p3
+pushd test
+zcat %{SOURCE2} | tar xvf -
+popd
 
 chmod a-x mspack/mspack.h
+
+autoreconf -i
 
 
 %build
@@ -71,6 +91,10 @@ popd
 
 
 %changelog
+* Thu Aug  2 2018 Richard W.M. Jones <rjones@redhat.com> - 0.5-0.6.alpha
+- Fixes for CVE-2018-14679 CVE-2018-14680 CVE-2018-14681 CVE-2018-14682
+- resolves: rhbz#1611550 rhbz#1611551 rhbz#1611552 rhbz#1611553
+
 * Thu Mar 16 2017 Richard W.M. Jones <rjones@redhat.com> - 0.5-0.5.alpha
 - Remove ExclusiveArch
   resolves: rhbz#1422266
